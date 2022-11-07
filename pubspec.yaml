@@ -43,6 +43,7 @@ dependencies:
   sizer: ^2.0.15
   fluttertoast: ^8.1.1
   rxdart: ^0.27.5
+  cached_network_image: ^3.2.2
   
 
 dev_dependencies:

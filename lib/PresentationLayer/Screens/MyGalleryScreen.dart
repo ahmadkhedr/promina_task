@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,7 +31,7 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
-        height: 100.h,
+        //  height: 100.h,
         width: 100.w,
         decoration: BoxDecoration(
             image: DecorationImage(
@@ -120,20 +121,28 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
         itemBuilder: ((context, index) {
           return Column(
             children: [
-              Container(
-                  height: 12.h,
-                  width: 25.w,
+              CachedNetworkImage(
+                imageUrl: images[index],
+                imageBuilder: (context, imageProvider) => Container(
+                   height: 12.h,
+                    width: 25.w,
                   decoration: BoxDecoration(
-                      // ignore: unnecessary_new
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                      image: DecorationImage(
-                          image: NetworkImage((images[index])),
-                          fit: BoxFit.cover))),
-              // Image(
-              //   image: NetworkImage(images[index]),
-              // ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                    height: 12.h,
+                    width: 25.w,
+                    child: Center(child: CircularProgressIndicator())),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+             
             ],
           );
         }));
@@ -216,7 +225,7 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
                     onTap: () async {
                       final XFile? image = await _picker.pickImage(
                         source: ImageSource.gallery,
-                        imageQuality: 50,
+                        imageQuality: 30,
                       );
                       uploadcubit.uploadImage(File(image!.path));
                     },
@@ -224,7 +233,6 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
                       image: AssetImage("assets/images/gallery_source.png"),
                       height: 10.h,
                       width: 40.w,
-                    
                     ),
                   ),
                   Padding(
