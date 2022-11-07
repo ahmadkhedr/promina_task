@@ -13,12 +13,13 @@ import '../../DataLayer/Models/OnLineModels/LoginModel.dart';
 
 class LoginScreen extends StatelessWidget with ConstantWidgets {
   LoginModel? loginModel;
+  bool? isNew;
   LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     var loginBloc = BlocProvider.of<LoginCubit>(context, listen: false);
-
+    loginBloc.checkLocalData();
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
@@ -44,15 +45,22 @@ class LoginScreen extends StatelessWidget with ConstantWidgets {
                   Navigator.pop(context);
                   Fluttertoast.showToast(msg: "error Occured");
                 } else if (state is LoginLoading) {
-                  showLoaderDialog(context);
+                  showLoaderDialog(context, "Signing In");
                 } else if (state is LoginLoaded) {
                   loginModel = (state).loginModel;
-                  AppSingltons().token = loginModel!.token!;
-                  AppSingltons().userName = loginModel!.user!.name!;
-                  AppSingltons().userId = loginModel!.user!.id!;
+
+                  loginBloc.saveLocalData(loginModel!);
 
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, myGalleryScreen);
+                  Navigator.pushReplacementNamed(context, myGalleryScreen);
+                } else if (state is LoginCheck) {
+                  showLoaderDialog(context, "Please Wait");
+                } else if (state is LoginChecked) {
+                //  Navigator.pop(context);
+                  isNew = (state).isNew;
+                  isNew!
+                      ? null
+                      : Navigator.pushReplacementNamed(context, myGalleryScreen);
                 }
               }),
               child: Container(

@@ -4,6 +4,8 @@ import 'package:pro_mina_task/BusinessLogicLayer/Validators.dart';
 import 'package:pro_mina_task/DataLayer/Repositories/LoginRepository.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../Configs/StorageMAnager.dart';
+import '../../Core/AppSingltons.dart';
 import '../../DataLayer/Models/OnLineModels/LoginModel.dart';
 
 part 'login_state.dart';
@@ -38,5 +40,30 @@ class LoginCubit extends Cubit<LoginState> with Validators {
         ? emit(LoginLoaded(loginModel!))
         : emit(LoginFailed());
     //  emit(LoginFailed());
+  }
+
+  saveLocalData(LoginModel loginModel) {
+    AppSingltons().token = loginModel.token!;
+    AppSingltons().userName = loginModel.user!.name!;
+    AppSingltons().userId = loginModel.user!.id!;
+    StorageManager.saveData("token", loginModel.token);
+    StorageManager.saveData("userName", loginModel.user!.name);
+    StorageManager.saveData("userId", loginModel.user!.id);
+  }
+
+  checkLocalData() async {
+    emit(LoginCheck());
+
+    var value = await StorageManager.readData("token");
+    value != null ? getLocalData() : null;
+    emit(LoginChecked(value != null ? false : true));
+
+    //AppSingltons().getSessionId();
+  }
+
+  getLocalData() async {
+    AppSingltons().token = await StorageManager.readData("token");
+    AppSingltons().userName = await StorageManager.readData("userName");
+    AppSingltons().userId = await StorageManager.readData("userId");
   }
 }

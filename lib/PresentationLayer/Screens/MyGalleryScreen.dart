@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pro_mina_task/BusinessLogicLayer/cubit/upload_image_cubit.dart';
 import 'package:pro_mina_task/Core/AppSingltons.dart';
 import 'package:pro_mina_task/Core/Constants/ConstantsWidgets.dart';
+import 'package:pro_mina_task/Core/Constants/Strings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../BusinessLogicLayer/cubit/my_gallery_cubit.dart';
@@ -67,7 +69,7 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              signOutButton(),
+                              signOutButton(context),
                               uploadButton(context, uploadImageCubit)
                             ],
                           ),
@@ -85,7 +87,7 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
             BlocListener<UploadImageCubit, UploadImageState>(
               listener: (context, state) {
                 if (state is UploadImageLoading) {
-                  showLoaderDialog(context);
+                  showLoaderDialog(context, "Uploading Image");
                 } else if (state is UploadImageInitial) {
                   Navigator.pop(context);
                 } else if (state is UploadImageLoadded) {
@@ -137,9 +139,13 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
         }));
   }
 
-  Widget signOutButton() {
+  Widget signOutButton(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        final SharedPrefs = await SharedPreferences.getInstance();
+        SharedPrefs.clear();
+        Navigator.pushReplacementNamed(context, loginScreen);
+      },
       child: Container(
         padding: EdgeInsets.all(1.h),
         height: 5.h,
@@ -150,7 +156,8 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
             // ignore: prefer_const_literals_to_create_immutables
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Icon(
-            Icons.login_outlined,
+            Icons.arrow_back,
+            color: Colors.red,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -177,7 +184,8 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
             // ignore: prefer_const_literals_to_create_immutables
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Icon(
-            Icons.upload,
+            Icons.arrow_upward,
+            color: Colors.yellow,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -214,12 +222,13 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
                     },
                     child: Image(
                       image: AssetImage("assets/images/gallery_source.png"),
-                      height: 13.h,
+                      height: 10.h,
                       width: 40.w,
+                    
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 1.h),
+                    padding: EdgeInsets.only(top: .5.h),
                     child: InkWell(
                       onTap: () async {
                         final XFile? image = await _picker.pickImage(
@@ -230,7 +239,7 @@ class MyGalleryScreen extends StatelessWidget with ConstantWidgets {
                       },
                       child: Image(
                         image: AssetImage("assets/images/camera_source.png"),
-                        height: 13.h,
+                        height: 10.h,
                         width: 40.w,
                       ),
                     ),

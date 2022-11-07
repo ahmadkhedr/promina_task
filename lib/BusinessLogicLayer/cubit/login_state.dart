@@ -12,6 +12,11 @@ class LoginLoaded extends LoginState {
   LoginModel loginModel;
 }
 
-class LoginFailed extends LoginState{
-  
+class LoginFailed extends LoginState {}
+
+class LoginCheck extends LoginState {}
+
+class LoginChecked extends LoginState {
+  bool isNew;
+  LoginChecked(this.isNew);
 }

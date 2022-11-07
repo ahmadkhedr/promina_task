@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 
 mixin ConstantWidgets {
-  showLoaderDialog(BuildContext context) {
+  showLoaderDialog(BuildContext context,String title) {
     AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(),
           Container(
-              margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+              margin: EdgeInsets.only(left: 7), child: Text("$title...")),
         ],
       ),
     );
