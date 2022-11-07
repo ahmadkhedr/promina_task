@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget with ConstantWidgets {
                 padding: EdgeInsets.all(4.h),
                 width: 70.w,
                 decoration: BoxDecoration(
-                    color: Color(0x66FFFFFF),
+                    color: Color(0xA6FFFFFF),
                     borderRadius: BorderRadius.all(
                       Radius.circular(20.0),
                     )),
@@ -73,7 +73,7 @@ class LoginScreen extends StatelessWidget with ConstantWidgets {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 5.h),
+              padding: EdgeInsets.only(top: 3.h),
               child: submitButton(loginBloc),
             )
           ],
